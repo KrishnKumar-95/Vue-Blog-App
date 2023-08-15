@@ -12,9 +12,8 @@ const INITIAL_CURRENT_USER: IUser = {
 export const useAuthStore = defineStore(AUTH_STORE_ID, () => {
   // login user
   const current_user = reactive<IUser>(INITIAL_CURRENT_USER)
-
   const isAuthenticated = ref<boolean>(false)
-
+  
   // Gives all Registered USERs if Any
   const storedUsers = () => {
     const stored_users: any = localStorage.getItem(REGISTER_USER_STORAGE_KEY);
@@ -54,5 +53,5 @@ export const useAuthStore = defineStore(AUTH_STORE_ID, () => {
     return { status: true, msg: LOGOUT_SUCCESS }
   }
 
-  return { current_user, registerUser, loginUser, logout, isAuthenticated }
+  return { current_user, registerUser, loginUser, logout, isAuthenticated, storedUsers }
 })

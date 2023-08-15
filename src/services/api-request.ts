@@ -35,7 +35,7 @@ export abstract class APIRequest {
             ...headers || {}
         }
 
-        return fetch(isUrl(url) ? url : import.meta.env.BASE_URL,{
+        return fetch(isUrl(url) ? url : import.meta.env.VITE_BASE_URL + url,{
             method: verb,
             headers: updatedHeader,
             body: body ? JSON.stringify(body): null
@@ -50,8 +50,12 @@ export abstract class APIRequest {
     }
     
     // ADD POST
-    post(url: string, data?: any, headers?: { [key: string]: string }) {
-        const formData = new FormData()
+    post(
+      url: string, 
+      data: any,
+    headers?: { [key: string]: string }) {
+      // const formData = new FormData();
+      // data.forEach((d) => formData.append(d.fieldname, d.file, d.file.name));
       return this.request(url, 'post', data, headers);
     }
 }

@@ -6,9 +6,11 @@ import router from './router'
 import vuetify from './plugins/vuetify'
 
 const app = createApp(App)
-
-app.use(createPinia())
+const pinia = createPinia()
+app.use(pinia)
 app.use(router)
 app.use(vuetify)
+
+// console.log("VITE_BASE_URL => ",import.meta.env);
 
 app.mount('#app')
