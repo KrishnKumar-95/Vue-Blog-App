@@ -1,0 +1,57 @@
+import router from "@router/index";
+import { isUrl } from "@utils/validators"
+
+export abstract class APIRequest {
+
+    // CHECK STATUS & SEND RESPONSE
+    private checkStatus(response: Response) {
+        if (response.status >= 200 && response.status < 300) {
+          return response;
+        }
+        if (response.status === 401) {
+            router.push('/auth/login');
+          throw new Error('Forbidden in the action!');
+        }
+        throw response.clone().json();
+    }
+
+    // CHECK STATUS & PARSE
+    private parseJSON(response: Response) {
+      if (response.status === 204 || response.status === 205) {
+        return null;
+      }
+      return response.json();
+    }
+
+    request(
+        url: string, 
+        method?: string, 
+        body?: any, 
+        headers?: { [key: string]: string }
+    ) {
+        const verb = (method || 'get').toUpperCase()
+        const updatedHeader = {
+            'Content-Type': 'application/json',
+            ...headers || {}
+        }
+
+        return fetch(isUrl(url) ? url : import.meta.env.BASE_URL,{
+            method: verb,
+            headers: updatedHeader,
+            body: body ? JSON.stringify(body): null
+        })
+        .then(this.checkStatus)
+        .then(this.parseJSON)
+    }
+
+    // GET BLOG
+    get(url: string, headers?: { [key: string]: string }) {
+        return this.request(url, 'get', null, headers);
+    }
+    
+    // ADD POST
+    post(url: string, data?: any, headers?: { [key: string]: string }) {
+        const formData = new FormData()
+      return this.request(url, 'post', data, headers);
+    }
+}
