@@ -1,11 +1,17 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '@views/HomeView.vue'
 import { useAuthStore } from '@stores/authStore'
-import { computed } from 'vue'
+import { computed, watch } from 'vue'
 
-const authStore = useAuthStore()
+// const isAuthenticated = computed(() => {
+//   const authStore = useAuthStore()
+//   return authStore.$state.isAuthenticated
+// })
+const isAuthenticated = false
 
-const isAuthenticated = computed(() => authStore.$state.isAuthenticated)
+watch(() => [isAuthenticated], (val) => {
+  console.log("val => ", val[0])
+})
 
 // Authentication components
 const Authentication = {
@@ -23,14 +29,19 @@ const Blog = {
 const checkAuth = (to: any, from: any, next: Function) => {
   if (!isAuthenticated) {
     next("/auth/login")
+  } else {
+    next()
   }
 }
 
 const sendToLogin = (to: any, from: any, next: Function) => {
+  const authStore = useAuthStore()
   if (isAuthenticated) {
-    next('/auth/login')
-  } else {
+    next('/blog')
+  } else if (authStore.storedUsers().length === 0) {
     next('/auth/register')
+  } else {
+    next('/auth/login')
   }
 }
 
@@ -40,7 +51,15 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: HomeView,
+      component: () => import("@views/HomeView.vue"),
+    },
+    {
+      path: '/about',
+      name: 'about',
+      // route level code-splitting
+      // this generates a separate chunk (About.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      component: () => import("@views/AboutView.vue")
     },
     {
       path: "/auth",
@@ -48,14 +67,14 @@ const router = createRouter({
       beforeEnter: sendToLogin,
       children: [
         {
-          path: "/login",
+          path: "login",
           name: "login",
-          component: Authentication.login
+          component: Authentication.login()
         },
         {
-          path: "/register",
+          path: "register",
           name: "register",
-          component: Authentication.register
+          component: Authentication.register()
         },
       ]
     },
@@ -63,30 +82,22 @@ const router = createRouter({
       path: "/blog",
       name: "Blog",
       beforeEnter: checkAuth,
-      component: Blog.all_posts,
+      component: Blog.all_posts(),
       children: [
         {
-          path: "/add-post",
+          path: "add-post",
           name: "Add Post",
-          component: Blog.add_post,
+          component: Blog.add_post(),
           beforeEnter: checkAuth,
         },
         {
-          path: "/post:id",
+          path: "post:id",
           name: "Post",
-          component: Blog.single_post,
+          component: Blog.single_post(),
           beforeEnter: checkAuth,
         },
       ]
     }
-    // {
-    //   path: '/login',
-    //   name: 'login',
-    //   // route level code-splitting
-    //   // this generates a separate chunk (About.[hash].js) for this route
-    //   // which is lazy-loaded when the route is visited.
-    //   component: LoginView
-    // }
   ]
 })
 
