@@ -1,4 +1,4 @@
-import type { IUser } from "@interfaces/User";
+import type { ILoginUser, IUser } from "@interfaces/User";
 import { useAuthStore } from "@stores/authStore";
 import { REGISTER_USER_STORAGE_KEY } from "@utils/constants";
 
@@ -24,10 +24,12 @@ export class _AuthService {
         }
     }
 
-    loginUser(payload: IUser) {
+    loginUser(payload: ILoginUser) {
         try {
             const authStore = useAuthStore()
             const resp = authStore.loginUser(payload)
+            console.log("servive => ", resp);
+            
             if (resp.status) {
                 return { status: resp.status, user: resp.user, msg: resp.msg }
             } else {

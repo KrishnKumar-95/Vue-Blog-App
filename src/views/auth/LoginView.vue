@@ -42,6 +42,23 @@
         </v-btn>
       </v-form>
   </main>
+
+  <v-snackbar
+      v-model="status.alert"
+      color="info"
+    >
+      {{ status.alert_msg }}
+
+      <template v-slot:actions>
+        <v-btn
+          color="white"
+          variant="text"
+          @click="status.alert = false"
+        >
+          Close
+        </v-btn>
+      </template>
+    </v-snackbar>
 </template>
 
 <script setup lang="ts">
@@ -52,7 +69,8 @@
   import { email, required, helpers, minLength } from '@vuelidate/validators';
 import type { ILoginUser } from '@interfaces/User';
 import { ref } from 'vue';
-import { watch } from 'vue';
+import { AuthService } from '@services/auth.services';
+import router from '@router/index';
 
 
 const valid = ref<boolean>(false)
@@ -66,6 +84,11 @@ const valid = ref<boolean>(false)
     ...initialState,
   })
 
+  const status = reactive({
+    alert: false,
+    alert_msg: ""
+  })
+
   const rules = {
     email: { 
       required: helpers.withMessage("E-mail is required", required),
@@ -76,9 +99,16 @@ const valid = ref<boolean>(false)
 
   const v$ = useVuelidate(rules, state)
 
-  const handleSubmit = (data:any) => {
+  const handleSubmit = async (data:any) => {
     if(valid.value) {
-      console.log({ data });
+      try {
+        const resp = await AuthService.loginUser(state)
+        status.alert = true
+        status.alert_msg = resp.msg
+        router.push('/')
+      } catch (error) {
+        
+      }
     }
   }
 

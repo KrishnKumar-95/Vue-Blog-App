@@ -2,6 +2,7 @@
 export const REGISTER_USER_STORAGE_KEY: string = "registered_users"
 export const REGISTER_SUCCESS: string = "User registered successfully"
 export const REGISTER_UNSUCCESS: string = "User can't registered"
+export const ALREADY_REGISTER: string = "User already exists"
 
 // Login-Logout
 export const LOGIN_SUCCESS: string = "User login successfully"
