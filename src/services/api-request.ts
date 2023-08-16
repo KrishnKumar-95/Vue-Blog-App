@@ -60,9 +60,7 @@ export abstract class APIRequest {
     post(
       url: string, 
       data: any,
-    headers?: { [key: string]: string }) {
-      // const formData = new FormData();
-      // data.forEach((d) => formData.append(d.fieldname, d.file, d.file.name));
+      headers?: { [key: string]: string }) {
       return this.request(url, 'post', data, headers);
     }
 }

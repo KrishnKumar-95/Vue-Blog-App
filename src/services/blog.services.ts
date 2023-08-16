@@ -4,8 +4,6 @@ import { APIRequest } from "./api-request";
 export class _BlogService extends APIRequest {
 
     createPost(payload: any, headers: any) {
-        console.log({ payload });
-        
         return this.post('create',payload, headers)
     }
 
