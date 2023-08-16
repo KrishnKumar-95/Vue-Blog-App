@@ -1,15 +1,25 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router'
 import { useAuthStore } from '@stores/authStore';
-import { ref } from 'vue';
-import { watch } from 'vue';
+import { computed, ref } from 'vue';
 import Link from "@components/customs/Link.vue"
+import { reactive } from 'vue';
+import type { IUser } from '@interfaces/User';
+import { watch } from 'vue';
 
-const isAuthenticated = ref<boolean>(false)
-const authStore:any = useAuthStore();
+const authStore: any = useAuthStore()
+const isAuthenticated = computed(() => authStore.isAuthenticated)
 
-watch(() => [authStore],(val:any) => {
-  console.log(authStore[0]);
+const USER = reactive<IUser>({
+  name: "",
+  email: "",
+  password: ""
+})
+
+const current_user = computed(() => authStore.current_user)
+
+watch(() => [current_user], (val) => {
+  Object.assign(USER, val[0])
 })
 
 </script>
@@ -17,14 +27,18 @@ watch(() => [authStore],(val:any) => {
 <template>
   <header>
     <nav>
-      <Link to="/" title="Home"/>
-      <Link to="/blog/add-post" title="Create Post"/>
-      <Link to="/about" title="About"/>
-      <Link to="/auth/login" title="Login"/>
-      <Link to="/auth/register" title="Register"/>
+      <Link to="/" title="Home" />
+      <Link to="/blog/add-post" title="Create Post" />
+      <Link to="/about" title="About" />
+      <Link v-if="!isAuthenticated" to="/auth/login" title="Login" />
+      <Link v-if="!isAuthenticated" to="/auth/register" title="Register" />
+      <Link v-if="isAuthenticated" to="" :title="current_user.name" />
+      <Link v-if="isAuthenticated" to="" :title="current_user.email" />
     </nav>
-  </header>
 
+    <v-btn v-if="isAuthenticated" variant="elevated" color="black" size="small" class="ma-2 me-6 text-subtitle-2" @click="() => authStore.logout()">Logout</v-btn>
+
+  </header>
   <div>
     <RouterView />
   </div>

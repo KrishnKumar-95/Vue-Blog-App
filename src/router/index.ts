@@ -3,16 +3,7 @@ import HomeView from '@views/HomeView.vue'
 import { useAuthStore } from '@stores/authStore'
 import { computed, watch } from 'vue'
 import PostsViewVue from '@views/blog/PostsView.vue'
-
-// const isAuthenticated = computed(() => {
-//   const authStore = useAuthStore()
-//   return authStore.$state.isAuthenticated
-// })
-const isAuthenticated = false
-
-watch(() => [isAuthenticated], (val) => {
-  console.log("val => ", val[0])
-})
+import { REGISTER_USER_STORAGE_KEY } from '@utils/constants'
 
 // Authentication components
 const Authentication = {
@@ -27,25 +18,6 @@ const Blog = {
   single_post: () => import("@views/blog/PostView.vue"),
 }
 
-const checkAuth = (to: any, from: any, next: Function) => {
-  if (!isAuthenticated) {
-    next("/auth/login")
-  } else {
-    next()
-  }
-}
-
-const sendToLogin = (to: any, from: any, next: Function) => {
-  const authStore = useAuthStore()
-  if (isAuthenticated) {
-    next('/blog')
-  } else if (authStore.storedUsers().length === 0) {
-    next('/auth/register')
-  } else {
-    next('/auth/login')
-  }
-}
-
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -57,15 +29,11 @@ const router = createRouter({
     {
       path: '/about',
       name: 'about',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
       component: () => import("@views/AboutView.vue")
     },
     {
       path: "/auth",
       name: "auth",
-      // beforeEnter: sendToLogin,
       children: [
         {
           path: "login",
@@ -81,7 +49,6 @@ const router = createRouter({
     },
     {
       path: "/blog",
-      // beforeEnter: checkAuth,
       name: "Blog",
       children: [
       // {
@@ -93,17 +60,26 @@ const router = createRouter({
           path: "add-post",
           name: "Add Post",
           component: Blog.add_post(),
-          // beforeEnter: checkAuth,
         },
         {
           path: "post/:id",
           name: "Post",
           component: Blog.single_post(),
-          // beforeEnter: checkAuth,
         },
       ]
     }
   ]
+})
+
+router.beforeEach(async (to, from) => {
+  const authStore = useAuthStore()
+  const users = JSON.parse(localStorage.getItem(REGISTER_USER_STORAGE_KEY) || JSON.stringify([]))
+  
+  if (!authStore.isAuthenticated && to.name !== 'login' && users.length > 0) {
+    return { name: 'auth/login' }
+  } else if (!authStore.isAuthenticated && to.name !== 'register' && users.length === 0) {
+    return { name: 'auth/register' }
+  }
 })
 
 export default router

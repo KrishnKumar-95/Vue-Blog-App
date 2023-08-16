@@ -19,6 +19,8 @@ import type { IBlog } from "@interfaces/Blog";
 import { defineAsyncComponent, ref } from "vue";
 import { onBeforeMount } from "vue";
 import { BlogService } from "@services/blog.services";
+import { useAuthStore } from "@stores/authStore";
+import router from "@router/index";
 
 const PostCard = defineAsyncComponent({
   loader: () => import('@components/customs/PostCard.vue'),
@@ -27,6 +29,7 @@ const PostCard = defineAsyncComponent({
   timeout:3000,
 })
 
+const authRouter = useAuthStore()
 
 const posts = ref<IBlog[]>([])
 const total = ref<number>(0)
@@ -40,7 +43,6 @@ const getPosts = async () => {
 }
 
 onBeforeMount(getPosts)
-
 </script>
   
 <style scoped>

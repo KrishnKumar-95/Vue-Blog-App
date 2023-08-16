@@ -1,7 +1,8 @@
 import { reactive, ref } from 'vue'
 import { defineStore } from 'pinia'
 import type { ILoginUser, IUser } from '@interfaces/User'
-import { AUTH_STORE_ID, LOGIN_SUCCESS, LOGIN_UNSUCCESS, LOGOUT_SUCCESS, REGISTER_SUCCESS, REGISTER_UNSUCCESS, REGISTER_USER_STORAGE_KEY } from '@utils/constants'
+import { ALREADY_REGISTER, AUTH_STORE_ID, LOGIN_SUCCESS, LOGIN_UNSUCCESS, LOGOUT_SUCCESS, REGISTER_SUCCESS, REGISTER_UNSUCCESS, REGISTER_USER_STORAGE_KEY } from '@utils/constants'
+import router from '@router/index'
 
 const INITIAL_CURRENT_USER: IUser = {
   name: "",
@@ -25,6 +26,10 @@ export const useAuthStore = defineStore(AUTH_STORE_ID, () => {
   const registerUser = (new_user: IUser) => {
     try {
       const _registered_users: IUser[] | any = storedUsers()
+      const already_exist = _registered_users.length > 0 ? _registered_users.find((m:any) => m.email === new_user.email) : undefined
+      if (already_exist) {
+        return { status: false, user: already_exist, msg: ALREADY_REGISTER }
+      }
       _registered_users.push(new_user)
       const newUserAdded: string = JSON.stringify(_registered_users)
       localStorage.setItem(REGISTER_USER_STORAGE_KEY, newUserAdded)
@@ -37,7 +42,9 @@ export const useAuthStore = defineStore(AUTH_STORE_ID, () => {
   // Login user
   const loginUser = (user: ILoginUser) => {
     const _registered_users: IUser[] | any = storedUsers()
-    const USER = _registered_users.find((_user: IUser) => _user.email === user.email && _user.password === user.password)
+    const USER = _registered_users.find((_user: IUser) => _user.email === user.email && _user.password.toString() === user.password.toString())
+    console.log("USER => ", USER,storedUsers(),user);
+    
     if (USER) {
       Object.assign(current_user, USER)
       isAuthenticated.value = true
@@ -50,6 +57,7 @@ export const useAuthStore = defineStore(AUTH_STORE_ID, () => {
   const logout = () => {
     Object.assign(current_user, INITIAL_CURRENT_USER)
     isAuthenticated.value = false
+    router.push("/auth/login")
     return { status: true, msg: LOGOUT_SUCCESS }
   }
 

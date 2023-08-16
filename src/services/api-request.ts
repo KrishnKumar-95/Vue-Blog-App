@@ -35,11 +35,18 @@ export abstract class APIRequest {
             ...headers || {}
         }
 
-        return fetch(isUrl(url) ? url : import.meta.env.VITE_BASE_URL + url,{
-            method: verb,
-            headers: updatedHeader,
-            body: body ? JSON.stringify(body): null
-        })
+        const options = {
+          method: verb,
+          body: body
+        }
+
+        const __options = {
+          method: verb,
+          headers: updatedHeader,
+          body: body
+      }
+
+        return fetch(isUrl(url) ? url : import.meta.env.VITE_BASE_URL + url, verb === "POST" ? options : __options)
         .then(this.checkStatus)
         .then(this.parseJSON)
     }
