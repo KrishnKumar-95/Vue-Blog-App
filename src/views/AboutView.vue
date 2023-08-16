@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { useAuthStore } from '@stores/authStore';
-const authStore = useAuthStore()
+    import { useAuthStore } from '@stores/authStore';
+    const authStore = useAuthStore()
 </script>
 
 <template>
     <main>
-        <h2>Blog with Login and Register</h2>
+        <h1>Blog with Login and Register</h1>
         <div class="about-box">
             <div class="abc">
                 <div class="box">
@@ -39,7 +39,7 @@ main {
     width: 100vw;
 }
 
-main h2 {
+main h1 {
     text-align: center;
 }
 
@@ -58,6 +58,7 @@ main h2 {
     display: flex;
     justify-content: center;
     align-items: center;
+    margin-top: 3rem;
 }
 
 .box {
@@ -65,6 +66,11 @@ main h2 {
     grid-template-columns: 1fr 1fr;
     margin: 0.5rem 0;
 }
+
+/* h3 {
+    display: block;
+    margin: auto;
+} */
 
 .dev-image img {
     width: 70px;
