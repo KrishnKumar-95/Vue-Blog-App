@@ -2,41 +2,41 @@
 
 This template should help get you started developing with Vue 3 in Vite + TypeScript
 
-#Login Page
+##Login Page
 Vuetify form and validations and store in authStore
 
-#Register Page
+##Register Page
 Register new User and save in Localstorage
 
-#About Page
+##About Page
 My details in this about page
 
-#Post Listing Page
+##Post Listing Page
 Post listing in grid view with some styling
 
-#Post Details Page
+##Post Details Page
 Post details page with image shown and back button
 
-#Components
+##Components
 Used Link and PostCard custom Component and Vuetify
 
-#Services
+##Services
 Make services for API implementation
 
-#Store
+##Store
 Used Pinia Store for State Management
 
-#Constants and Interfaces
+##Constants and Interfaces
 Keep constant and interfaces in saperate file
 
-#Protected Routes
+##Protected Routes
 Cannot move other than login without authentication
 Cannot move to any other page if no one is registered
 
-#User Details
+##User Details
 User details show on Navigtion bar only if Authenticated
 
-#Navigation Bar
+##Navigation Bar
 Navigation bar to show details of Login User and hides Login and Register button after authentication
 
 
@@ -72,6 +72,18 @@ npm install
 
 ```sh
 npm run dev
+```
+
+### Install Node server deps 1  
+
+```sh
+npm install
+```
+
+### Start Node server 2
+
+```sh
+nodemon src/app.js
 ```
 
 ### Type-Check, Compile and Minify for Production
