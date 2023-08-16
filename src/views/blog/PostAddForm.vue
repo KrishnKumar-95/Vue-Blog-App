@@ -21,6 +21,23 @@
       </v-btn>
     </v-form>
   </main>
+
+  <v-snackbar
+      v-model="status.alert"
+      color="info"
+    >
+      {{ status.alert_msg }}
+
+      <template v-slot:actions>
+        <v-btn
+          color="white"
+          variant="text"
+          @click="status.alert = false"
+        >
+          Close
+        </v-btn>
+      </template>
+    </v-snackbar>
 </template>
 
 <script setup lang="ts">
@@ -32,6 +49,11 @@ import { email, required, helpers } from '@vuelidate/validators';
 import type { IBlog } from '@interfaces/Blog';
 import { ref } from 'vue';
 import { BlogService } from '@services/blog.services';
+import { onBeforeMount } from 'vue';
+import { useAuthStore } from '@stores/authStore';
+import { useRouter } from 'vue-router';
+import { computed } from 'vue';
+import { watch } from 'vue';
 
 const initialState = {
   id: 0,
@@ -43,6 +65,14 @@ const initialState = {
 const state: IBlog = reactive({
   ...initialState,
 })
+
+const status = reactive<{ alert: boolean, alert_msg: string }>({
+  alert: false,
+  alert_msg: ""
+})
+
+const authStore = useAuthStore()
+const router = useRouter()
 
 const valid = ref<boolean>(false)
 
@@ -66,7 +96,6 @@ const handleSubmit = async (data: any) => {
     _vals.forEach((v: any) => {
       if (v[0] !== 'id') {
         formData.append(v[0], v[1])
-        console.log(v[0], v[1])
       }
     })
 

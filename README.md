@@ -1,6 +1,47 @@
 # blogs-proj
 
-This template should help get you started developing with Vue 3 in Vite.
+This template should help get you started developing with Vue 3 in Vite + TypeScript
+
+#Login Page
+Vuetify form and validations and store in authStore
+
+#Register Page
+Register new User and save in Localstorage
+
+#About Page
+My details in this about page
+
+#Post Listing Page
+Post listing in grid view with some styling
+
+#Post Details Page
+Post details page with image shown and back button
+
+#Components
+Used Link and PostCard custom Component and Vuetify
+
+#Services
+Make services for API implementation
+
+#Store
+Used Pinia Store for State Management
+
+#Constants and Interfaces
+Keep constant and interfaces in saperate file
+
+#Protected Routes
+Cannot move other than login without authentication
+Cannot move to any other page if no one is registered
+
+#User Details
+User details show on Navigtion bar only if Authenticated
+
+#Navigation Bar
+Navigation bar to show details of Login User and hides Login and Register button after authentication
+
+
+>> Post must be save on the Registered ID basis on the Server but we are not saving Users on the Server.
+
 
 ## Recommended IDE Setup
 
