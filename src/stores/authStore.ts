@@ -43,7 +43,7 @@ export const useAuthStore = defineStore(AUTH_STORE_ID, () => {
       isAuthenticated.value = true
       return { user: USER, status: true, msg: LOGIN_SUCCESS }
     } else {
-      return { user: current_user, status: false, msg: LOGIN_UNSUCCESS }
+      return { status: false, msg: LOGIN_UNSUCCESS }
     }
   }
 

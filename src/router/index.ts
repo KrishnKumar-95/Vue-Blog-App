@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '@views/HomeView.vue'
 import { useAuthStore } from '@stores/authStore'
 import { computed, watch } from 'vue'
+import PostsViewVue from '@views/blog/PostsView.vue'
 
 // const isAuthenticated = computed(() => {
 //   const authStore = useAuthStore()
@@ -21,7 +22,7 @@ const Authentication = {
 
 // Blog components
 const Blog = {
-  all_posts: () => import("@views/blog/PostsView.vue"),
+  // all_posts: () => import("@views/blog/PostsView.vue"),
   add_post: () => import("@views/blog/PostAddForm.vue"),
   single_post: () => import("@views/blog/PostView.vue"),
 }
@@ -51,7 +52,7 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: () => import("@views/HomeView.vue"),
+      component: PostsViewVue,
     },
     {
       path: '/about',
@@ -64,7 +65,7 @@ const router = createRouter({
     {
       path: "/auth",
       name: "auth",
-      beforeEnter: sendToLogin,
+      // beforeEnter: sendToLogin,
       children: [
         {
           path: "login",
@@ -80,21 +81,25 @@ const router = createRouter({
     },
     {
       path: "/blog",
+      // beforeEnter: checkAuth,
       name: "Blog",
-      beforeEnter: checkAuth,
-      component: Blog.all_posts(),
       children: [
+      // {
+      //   path: "",
+      //   name: "Blog",
+      //   component: Blog.all_posts(),
+      // },
         {
           path: "add-post",
           name: "Add Post",
           component: Blog.add_post(),
-          beforeEnter: checkAuth,
+          // beforeEnter: checkAuth,
         },
         {
-          path: "post:id",
+          path: "post/:id",
           name: "Post",
           component: Blog.single_post(),
-          beforeEnter: checkAuth,
+          // beforeEnter: checkAuth,
         },
       ]
     }
